@@ -41,7 +41,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product addProduct(@PathVariable Integer id, @RequestBody Product product) {
         try {
-            return productService.createOrUpdateProduct(product.getId(), product);
+            return productService.createOrUpdateProduct(id, product);
         } catch (Exception e) {
             throw  new HttpClientErrorException(HttpStatusCode.valueOf(400), e.getMessage());
         }

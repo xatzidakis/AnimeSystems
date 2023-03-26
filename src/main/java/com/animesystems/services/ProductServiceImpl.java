@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
@@ -20,7 +22,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product createOrUpdateProduct(Integer id, Product product) throws Exception {
+        Product finalProduct;
         if(id !=null) {
+            Optional<Product> existingProduct = productRepository.findById(id);
+            if(existingProduct.isPresent()) {
+                product.setId(id);
+            }
             if(!id.equals(product.getId())) {
                 throw new Exception("id provided does not match id in body");
             }
