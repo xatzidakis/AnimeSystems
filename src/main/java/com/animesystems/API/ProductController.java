@@ -4,6 +4,7 @@ import com.animesystems.entities.Product;
 import com.animesystems.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -22,6 +23,16 @@ public class ProductController {
             @RequestParam(defaultValue = "3") int size
     ) {
         return productService.getAllProducts(page, size);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getProductById(@PathVariable Integer id) {
+        Product product = productService.getProductById(id);
+        if(product == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(product);
+        }
     }
 
     @DeleteMapping("/{id}")
