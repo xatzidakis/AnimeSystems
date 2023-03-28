@@ -16,8 +16,53 @@ public class Product {
     private String title;
     private String photo;
     private String category;
-    private String color;
-    private String size;
+    @Enumerated(EnumType.STRING)
+    private Color color;
+    public enum Color {
+        RED("Red"),
+        BLUE("Blue"),
+        GREEN("Green"),
+        YELLOW("Yellow"),
+        BLACK("Black"),
+        WHITE("White");
+
+        private final String name;
+
+        private Color(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+    public String getColor() {
+        return color.getName();
+    }
+    public enum Size {
+        XS("XS"),
+        S("S"),
+        M("M"),
+        L("L"),
+        XL("XL");
+
+        private final String name;
+
+        private Size(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+
+    @Enumerated(EnumType.STRING)
+    private Size size;
+    public String getSize() {
+        return size.getName();
+    }
     private Integer available_quantity;
 
     public Integer getId() {
@@ -66,22 +111,6 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public Integer getAvailable_quantity() {
