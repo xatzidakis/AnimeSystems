@@ -29,4 +29,29 @@ public class User {
     @Column(nullable = false)
     private String address;
 
+
+
+    @Enumerated(EnumType.STRING)
+    @Column//(nullable = false, columnDefinition = "varchar(255) default 'CUSTOMER'")
+    private UserRole userRole;
+
+    public boolean isAdmin() {
+        return UserRole.ADMIN.equals(userRole);
+    }
+
+    public UserRole getRole() {return this.userRole;}
+
+    public enum UserRole {
+        CUSTOMER("Customer"),
+        ADMIN("Admin");
+
+        private final String name;
+
+        private UserRole(String name) {this.name = name;}
+
+        public String getName() {return name;}
+    }
 }
+
+
+

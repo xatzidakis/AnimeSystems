@@ -16,6 +16,7 @@ public class Product {
     private String title;
     private String photo;
     private String category;
+
     @Enumerated(EnumType.STRING)
     private Color color;
     public enum Color {

@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setEmail(userDto.getEmail());
         existingUser.setPassword(userDto.getPassword());
         existingUser.setAddress(userDto.getAddress());
+        existingUser.setUserRole(User.UserRole.valueOf(userDto.getUserRole().toUpperCase()));
 
         User updatedUser = userRepository.save(existingUser);
         return UserMapper.mapToUserDto(updatedUser);
