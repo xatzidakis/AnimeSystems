@@ -1,13 +1,17 @@
 package com.animesystems.dtos;
 
 import com.animesystems.entities.Order;
+import com.animesystems.entities.ProductOrder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDto {
 
     private Integer id;
+
+    private Integer userId;
 
     private UserDto user;
 
@@ -24,6 +28,21 @@ public class OrderDto {
         this.user = user;
     }
 
+    public OrderDto(Order order) {
+        this.id = order.getId();
+        this.userId = order.getUser().getId();
+        this.totalPrice = order.getTotalPrice();
+        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
+        for(ProductOrder productOrder: order.getProductOrders()) {
+            ProductOrderDto productOrderDto = new ProductOrderDto();
+            productOrderDto.setId(productOrder.getId());
+            productOrderDto.setProductId(productOrder.getProduct().getId());
+            productOrderDto.setQuantity(productOrder.getQuantity());
+            productOrderDtos.add(productOrderDto);
+        }
+        this.productOrders = productOrderDtos;
+    }
+
 
 
 
@@ -35,7 +54,7 @@ public class OrderDto {
         this.id = id;
     }
 
-    public UserDto getUser() {
+    public UserDto getUserDto() {
         return user;
     }
 
@@ -68,7 +87,5 @@ public class OrderDto {
     }
 
 
-    public Integer getUserId() {
-        return this.user.getId();
-    }
+
 }

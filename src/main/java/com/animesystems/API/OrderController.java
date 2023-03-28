@@ -5,6 +5,7 @@ import com.animesystems.entities.Order;
 import com.animesystems.entities.Product;
 import com.animesystems.entities.ProductOrder;
 import com.animesystems.entities.User;
+import com.animesystems.mapper.UserMapper;
 import com.animesystems.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,48 +50,46 @@ public class OrderController {
 
 
 
+    @PostMapping("/orders")
+    public OrderDto createOrUpdateOrder(@RequestBody OrderDto orderDto, @RequestParam(required = false) Integer id) throws Exception {
+        Order order;
+        if (id != null) {
+            order = orderService.getOrderById(id);
+            if (order == null) {
+                throw new Exception("Order with id " + id + " does not exist.");
+            }
+        } else {
+            order = new Order();
+        }
 
+        order.setTotalPrice(orderDto.getTotalPrice());
+        order.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
 
+        List<ProductOrder> productOrders = new ArrayList<>();
+        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
+            ProductOrder productOrder;
+            if (productOrderDto.getId() != null) {
+                productOrder = orderService.getProductOrderById(productOrderDto.getId());
+                if (productOrder == null) {
+                    throw new Exception("ProductOrder with id " + productOrderDto.getId() + " does not exist.");
+                }
+            } else {
+                productOrder = new ProductOrder();
+            }
+            productOrder.setQuantity(productOrderDto.getQuantity());
+            productOrder.setProduct(new Product(productOrderDto.getProductId()));
+            productOrders.add(productOrder);
+        }
+        order.setProductOrders(productOrders);
 
+        Order savedOrder = orderService.createOrUpdateOrder(id, order);
+        return new OrderDto(savedOrder);
+    }
 
-    // -------------------------------------------------------------
-
-    //Help !
-
-//
-//    @PostMapping
-//    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
-//        Order order = new Order();
-//        order.setAddress(orderDto.getAddress());
-//        order.setUser(new User(orderDto.getUserId()));
-//        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
-//            ProductOrder productOrder = new ProductOrder();
-//            productOrder.setProduct(new Product(productOrderDto.getProductId()));
-//            productOrder.setQuantity(productOrderDto.getQuantity());
-//            order.addProductOrder(productOrder);
-//        }
-//        Order createdOrder = orderService.createOrder(order);
-//        return new OrderDto(createdOrder);
-//    }
-//
-//
-//    public Order updateOrder(@PathVariable("id") Integer id, @RequestBody OrderDto orderDto) {
-//        Order order = orderService.getOrderById(id);
-//
-//        User user = new User(orderDto.getUserId());
-//        order.setUser(user);
-//        order.setAddress(orderDto.getAddress());
-//
-//        List<ProductOrder> productOrders = new ArrayList<>();
-//        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
-//            Product product = new Product(productOrderDto.getProductId());
-//            ProductOrder productOrder = new ProductOrder(productOrderDto.getQuantity(), product, order);
-//            productOrders.add(productOrder);
-//        }
-//        order.setProductOrders(productOrders);
-//
-//        return orderService.createOrUpdateOrder(order);
-//    }
+    @PutMapping("/orders/{id}")
+    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) throws Exception {
+        return createOrUpdateOrder(orderDto, id);
+    }
 
 
 
