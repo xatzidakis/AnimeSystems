@@ -50,7 +50,7 @@ public class OrderController {
 
 
 
-    @PostMapping("/orders")
+    @PostMapping
     public OrderDto createOrUpdateOrder(@RequestBody OrderDto orderDto, @RequestParam(required = false) Integer id) throws Exception {
         Order order;
         if (id != null) {

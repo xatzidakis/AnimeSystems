@@ -11,7 +11,6 @@ public class OrderDto {
 
     private Integer id;
 
-    private Integer userId;
 
     private UserDto user;
 
@@ -30,7 +29,6 @@ public class OrderDto {
 
     public OrderDto(Order order) {
         this.id = order.getId();
-        this.userId = order.getUser().getId();
         this.totalPrice = order.getTotalPrice();
         List<ProductOrderDto> productOrderDtos = new ArrayList<>();
         for(ProductOrder productOrder: order.getProductOrders()) {
