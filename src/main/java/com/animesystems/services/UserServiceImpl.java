@@ -34,9 +34,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer userId) {
-//        Optional<User> optionalUser = userRepository.findById(userId);
-//        User user = optionalUser.get();
-//        return UserMapper.mapToUserDto(user);
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found for id: " + userId));
         return UserMapper.mapToUserDto(existingUser);
