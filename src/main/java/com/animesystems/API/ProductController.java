@@ -4,6 +4,7 @@ import com.animesystems.entities.Product;
 import com.animesystems.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -24,6 +25,16 @@ public class ProductController {
         return productService.getAllProducts(page, size);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getProductById(@PathVariable Integer id) {
+        Product product = productService.getProductById(id);
+        if(product == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(product);
+        }
+    }
+
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Integer id) {
         productService.deleteProduct(id);
@@ -41,7 +52,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product addProduct(@PathVariable Integer id, @RequestBody Product product) {
         try {
-            return productService.createOrUpdateProduct(product.getId(), product);
+            return productService.createOrUpdateProduct(id, product);
         } catch (Exception e) {
             throw  new HttpClientErrorException(HttpStatusCode.valueOf(400), e.getMessage());
         }
