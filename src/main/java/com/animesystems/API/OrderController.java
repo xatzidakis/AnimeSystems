@@ -50,20 +50,42 @@ public class OrderController {
 
 
 
-    @PostMapping
-    public OrderDto createOrUpdateOrder(@RequestBody OrderDto orderDto, @RequestParam(required = false) Integer id) throws Exception {
-        Order order;
-        if (id != null) {
-            order = orderService.getOrderById(id);
-            if (order == null) {
-                throw new Exception("Order with id " + id + " does not exist.");
-            }
-        } else {
-            order = new Order();
+    @PostMapping("/orders")
+    public OrderDto createOrder(@RequestBody OrderDto orderDto) throws Exception {
+        // Map the OrderDto to an Order entity
+        Order order = new Order();
+        order.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
+        order.setTotalPrice(orderDto.getTotalPrice());
+        order.setAddress(orderDto.getAddress());
+
+        List<ProductOrder> productOrders = new ArrayList<>();
+        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
+            ProductOrder productOrder = new ProductOrder();
+            productOrder.setQuantity(productOrderDto.getQuantity());
+            productOrder.setProduct(new Product(productOrderDto.getProductId()));
+            productOrders.add(productOrder);
+        }
+        order.setProductOrders(productOrders);
+
+        // Save the Order entity using the OrderService
+        Order savedOrder = orderService.createOrUpdateOrder(order.getId(),order);
+
+        // Map the saved Order entity to an OrderDto and return it
+        return new OrderDto(savedOrder);
+    }
+
+    @PutMapping("/orders/{id}")
+    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) throws Exception {
+        // Retrieve the existing Order entity from the OrderService
+        Order existingOrder = orderService.getOrderById(id);
+        if (existingOrder == null) {
+            throw new Exception("Order with id " + id + " does not exist.");
         }
 
-        order.setTotalPrice(orderDto.getTotalPrice());
-        order.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
+        // Map the OrderDto to the existing Order entity
+        existingOrder.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
+        existingOrder.setTotalPrice(orderDto.getTotalPrice());
+        existingOrder.setAddress(orderDto.getAddress());
 
         List<ProductOrder> productOrders = new ArrayList<>();
         for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
@@ -80,16 +102,17 @@ public class OrderController {
             productOrder.setProduct(new Product(productOrderDto.getProductId()));
             productOrders.add(productOrder);
         }
-        order.setProductOrders(productOrders);
+        existingOrder.setProductOrders(productOrders);
 
-        Order savedOrder = orderService.createOrUpdateOrder(id, order);
+        // Save the updated Order entity using the OrderService
+        Order savedOrder = orderService.createOrUpdateOrder(existingOrder.getId(),existingOrder);
+
+        // Map the saved Order entity to an OrderDto and return it
         return new OrderDto(savedOrder);
     }
 
-    @PutMapping("/orders/{id}")
-    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) throws Exception {
-        return createOrUpdateOrder(orderDto, id);
-    }
+
+
 
 
 
