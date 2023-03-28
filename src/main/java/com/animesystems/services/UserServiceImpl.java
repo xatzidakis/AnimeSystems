@@ -2,6 +2,7 @@ package com.animesystems.services;
 
 import com.animesystems.dtos.UserDto;
 import com.animesystems.entities.User;
+import com.animesystems.exception.UserNotFoundException;
 import com.animesystems.mapper.UserMapper;
 import com.animesystems.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -33,9 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.get();
-        return UserMapper.mapToUserDto(user);
+//        Optional<User> optionalUser = userRepository.findById(userId);
+//        User user = optionalUser.get();
+//        return UserMapper.mapToUserDto(user);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found for id: " + userId));
+        return UserMapper.mapToUserDto(existingUser);
     }
 
 
@@ -49,7 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        User existingUser = userRepository.findById(userDto.getId()).get();
+        User existingUser = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found for id: " + userDto.getId()));
+
 
         existingUser.setFirstName(userDto.getFirstName());
         existingUser.setLastName(userDto.getLastName());
@@ -63,6 +69,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found for id: " + userId));
         userRepository.deleteById(userId);
     }
 
