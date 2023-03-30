@@ -33,9 +33,8 @@ public class OrderController {
     public Order createOrder(@RequestBody List<OrderItemDTO> orderItemDTOs) {
         String address = "aaaa";
         Order order = new Order();
-        order.setTotalPrice(0.0);
         order.setAddress(address);
-        Double pr = 0.0;
+        order.setTotalPrice(0.0);
 
         for (OrderItemDTO orderItemDTO : orderItemDTOs) {
 
@@ -46,15 +45,11 @@ public class OrderController {
             orderItem.setQuantity(orderItemDTO.getQuantity());
 
             order.addOrderItem(orderItem);
-            BigDecimal myQuantity = new BigDecimal(orderItemDTO.getQuantity());
+            order.addToTotalPrice(orderItemDTO.getQuantity()*product.getPrice().doubleValue());
 
-            Double price = product.getPrice().doubleValue();
-
-            pr += orderItemDTO.getQuantity()*price;
         }
 
 
-        order.setTotalPrice( pr);
         order = orderService.save(order);
 
         return order;

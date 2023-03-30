@@ -67,4 +67,8 @@ public class Order {
         }
         this.items.add(orderItem);
     }
+
+    public void addToTotalPrice(double productPrice) {
+        this.totalPrice += productPrice;
+    }
 }
