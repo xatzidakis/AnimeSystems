@@ -34,13 +34,13 @@ public class OrderController {
     @PostMapping("{userId}")
     public Order createOrder(@RequestBody OrderDTO orderDTO,
                              @PathVariable Integer userId) {
-// neo
-        UserDto userDto = userService.getUserById(userId); // neo
+
+        UserDto userDto = userService.getUserById(userId);
 
         Order order = new Order();
         order.setAddress(orderDTO.getAddress());
         order.setTotalPrice(0.0);
-        order.setUser(UserMapper.mapToUser(userDto)); // neo
+        order.setUser(UserMapper.mapToUser(userDto));
 
         for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
 
