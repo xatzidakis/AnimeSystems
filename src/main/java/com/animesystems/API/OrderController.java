@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -33,8 +35,10 @@ public class OrderController {
         Order order = new Order();
         order.setTotalPrice(0.0);
         order.setAddress(address);
+        Double pr = 0.0;
 
         for (OrderItemDTO orderItemDTO : orderItemDTOs) {
+
             Product product = productService.getProductById(orderItemDTO.getProductId());
 
             OrderItem orderItem = new OrderItem();
@@ -42,8 +46,15 @@ public class OrderController {
             orderItem.setQuantity(orderItemDTO.getQuantity());
 
             order.addOrderItem(orderItem);
+            BigDecimal myQuantity = new BigDecimal(orderItemDTO.getQuantity());
+
+            Double price = product.getPrice().doubleValue();
+
+            pr += orderItemDTO.getQuantity()*price;
         }
 
+
+        order.setTotalPrice( pr);
         order = orderService.save(order);
 
         return order;
