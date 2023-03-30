@@ -1,11 +1,8 @@
+
 package com.animesystems.entities;
-
-
 import java.util.List;
 import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 
@@ -19,9 +16,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<OrderItem> items;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column
     private Double totalPrice;
@@ -66,6 +67,19 @@ public class Order {
             this.items = new ArrayList<OrderItem>();
         }
         this.items.add(orderItem);
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    // Neoi gia User
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void addToTotalPrice(double productPrice) {

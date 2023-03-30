@@ -1,11 +1,14 @@
 package com.animesystems.API;
 import com.animesystems.dtos.OrderDTO;
 import com.animesystems.dtos.OrderItemDTO;
+import com.animesystems.dtos.UserDto;
 import com.animesystems.entities.Order;
 import com.animesystems.entities.Product;
 import com.animesystems.entities.OrderItem;
+import com.animesystems.mapper.UserMapper;
 import com.animesystems.services.OrderService;
 import com.animesystems.services.ProductService;
+import com.animesystems.services.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,23 +21,26 @@ public class OrderController {
 
     private final OrderService orderService;
     private final ProductService productService;
+    private final UserService userService;
 
-
-    public OrderController(OrderService orderService, ProductService productService) {
+    public OrderController(OrderService orderService, ProductService productService,UserService userService) {
         this.orderService = orderService;
         this.productService = productService;
+        this.userService = userService;
     }
 
 
 
-
-
-    @PostMapping
-    public Order createOrder(@RequestBody OrderDTO orderDTO) {
+    @PostMapping("{userId}")
+    public Order createOrder(@RequestBody OrderDTO orderDTO,
+                             @PathVariable Integer userId) {
+// neo
+        UserDto userDto = userService.getUserById(userId); // neo
 
         Order order = new Order();
         order.setAddress(orderDTO.getAddress());
         order.setTotalPrice(0.0);
+        order.setUser(UserMapper.mapToUser(userDto)); // neo
 
         for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
 
