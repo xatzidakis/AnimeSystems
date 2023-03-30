@@ -30,8 +30,8 @@ public class OrderController {
 
 
     @PostMapping
-    public Order createOrder(@RequestBody List<OrderItemDTO> orderItemDTOs) {
-        String address = "aaaa";
+    public Order createOrder(@RequestBody List<OrderItemDTO> orderItemDTOs,@RequestParam String address) {
+
         Order order = new Order();
         order.setAddress(address);
         order.setTotalPrice(0.0);
