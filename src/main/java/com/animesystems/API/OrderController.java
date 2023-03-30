@@ -1,5 +1,5 @@
 package com.animesystems.API;
-
+import com.animesystems.dtos.OrderDTO;
 import com.animesystems.dtos.OrderItemDTO;
 import com.animesystems.entities.Order;
 import com.animesystems.entities.Product;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -29,14 +27,16 @@ public class OrderController {
 
 
 
+
+
     @PostMapping
-    public Order createOrder(@RequestBody List<OrderItemDTO> orderItemDTOs,@RequestParam String address) {
+    public Order createOrder(@RequestBody OrderDTO orderDTO) {
 
         Order order = new Order();
-        order.setAddress(address);
+        order.setAddress(orderDTO.getAddress());
         order.setTotalPrice(0.0);
 
-        for (OrderItemDTO orderItemDTO : orderItemDTOs) {
+        for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
 
             Product product = productService.getProductById(orderItemDTO.getProductId());
 
@@ -46,14 +46,13 @@ public class OrderController {
 
             order.addOrderItem(orderItem);
             order.addToTotalPrice(orderItemDTO.getQuantity()*product.getPrice().doubleValue());
-
         }
-
 
         order = orderService.save(order);
 
         return order;
     }
+
 
     @GetMapping
     public List<Order> getAllOrders() {
