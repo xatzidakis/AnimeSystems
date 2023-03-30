@@ -1,122 +1,85 @@
 package com.animesystems.API;
-import com.animesystems.dtos.OrderDto;
-import com.animesystems.dtos.ProductOrderDto;
+
+import com.animesystems.dtos.OrderItemDTO;
 import com.animesystems.entities.Order;
 import com.animesystems.entities.Product;
-import com.animesystems.entities.ProductOrder;
-import com.animesystems.entities.User;
-import com.animesystems.mapper.UserMapper;
+import com.animesystems.entities.OrderItem;
 import com.animesystems.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import com.animesystems.services.ProductService;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-
-
     private final OrderService orderService;
+    private final ProductService productService;
 
 
-    public OrderController(OrderService orderService){
+    public OrderController(OrderService orderService, ProductService productService) {
         this.orderService = orderService;
-
-
+        this.productService = productService;
     }
 
 
-    @GetMapping("/{id}")
-    public Order getOrder(@PathVariable("id") Integer id) {
-        return orderService.getOrderById(id);
-    }
 
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Integer id) {
-        orderService.deleteOrder(id);
+    @PostMapping
+    public Order createOrder(@RequestBody List<OrderItemDTO> orderItemDTOs) {
+        String address = "aaaa";
+        Order order = new Order();
+        order.setTotalPrice(0.0);
+        order.setAddress(address);
+
+        for (OrderItemDTO orderItemDTO : orderItemDTOs) {
+            Product product = productService.getProductById(orderItemDTO.getProductId());
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProduct(product);
+            orderItem.setQuantity(orderItemDTO.getQuantity());
+
+            order.addOrderItem(orderItem);
+        }
+
+        order = orderService.save(order);
+
+        return order;
     }
 
     @GetMapping
-    public Page<Order> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size
-    ) {
-        return orderService.getAllOrders(page, size);
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    @GetMapping("/{id}")
+    public Order getOrderById(@PathVariable Integer id) {
+        Order order = orderService.findById(id);
+
+        if (order == null) {
+            // Throw an exception or handle the error in some way
+        }
+
+        return order;
     }
 
 
+    @DeleteMapping("/{id}")
+    public void deleteOrderById(@PathVariable Integer id) {
+        Order order = orderService.findById(id);
 
-
-    @PostMapping("/orders")
-    public OrderDto createOrder(@RequestBody OrderDto orderDto) throws Exception {
-        // Map the OrderDto to an Order entity
-        Order order = new Order();
-        order.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
-        order.setTotalPrice(orderDto.getTotalPrice());
-        order.setAddress(orderDto.getAddress());
-
-        List<ProductOrder> productOrders = new ArrayList<>();
-        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
-            ProductOrder productOrder = new ProductOrder();
-            productOrder.setQuantity(productOrderDto.getQuantity());
-            productOrder.setProduct(new Product(productOrderDto.getProductId()));
-            productOrders.add(productOrder);
+        if (order == null) {
+            // Throw an exception or handle the error in some way
         }
-        order.setProductOrders(productOrders);
 
-        // Save the Order entity using the OrderService
-        Order savedOrder = orderService.createOrUpdateOrder(order.getId(),order);
-
-        // Map the saved Order entity to an OrderDto and return it
-        return new OrderDto(savedOrder);
+        orderService.deleteById(id);
     }
-
-    @PutMapping("/orders/{id}")
-    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) throws Exception {
-        // Retrieve the existing Order entity from the OrderService
-        Order existingOrder = orderService.getOrderById(id);
-        if (existingOrder == null) {
-            throw new Exception("Order with id " + id + " does not exist.");
-        }
-
-        // Map the OrderDto to the existing Order entity
-        existingOrder.setUser(UserMapper.mapToUser(orderDto.getUserDto()));
-        existingOrder.setTotalPrice(orderDto.getTotalPrice());
-        existingOrder.setAddress(orderDto.getAddress());
-
-        List<ProductOrder> productOrders = new ArrayList<>();
-        for (ProductOrderDto productOrderDto : orderDto.getProductOrders()) {
-            ProductOrder productOrder;
-            if (productOrderDto.getId() != null) {
-                productOrder = orderService.getProductOrderById(productOrderDto.getId());
-                if (productOrder == null) {
-                    throw new Exception("ProductOrder with id " + productOrderDto.getId() + " does not exist.");
-                }
-            } else {
-                productOrder = new ProductOrder();
-            }
-            productOrder.setQuantity(productOrderDto.getQuantity());
-            productOrder.setProduct(new Product(productOrderDto.getProductId()));
-            productOrders.add(productOrder);
-        }
-        existingOrder.setProductOrders(productOrders);
-
-        // Save the updated Order entity using the OrderService
-        Order savedOrder = orderService.createOrUpdateOrder(existingOrder.getId(),existingOrder);
-
-        // Map the saved Order entity to an OrderDto and return it
-        return new OrderDto(savedOrder);
-    }
-
-
-
-
-
-
 }
+
+
+
 
 
 

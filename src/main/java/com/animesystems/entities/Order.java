@@ -1,42 +1,33 @@
 package com.animesystems.entities;
 
 
+import java.util.List;
+import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.util.List;
+
 
 @Entity
 @Table(name = "orders")
 public class Order {
 
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToMany(mappedBy = "order")
+    @JsonIgnore
+    private List<OrderItem> items;
 
-    private BigDecimal totalPrice;
+    @Column
+    private Double totalPrice;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductOrder> productOrders;
-
+    @Column
     private String address;
-
-
-
-
-
-    public Order() {
-    }
-
-    public Order(User user) {
-        this.user = user;
-
-    }
 
     public Integer getId() {
         return id;
@@ -46,51 +37,34 @@ public class Order {
         this.id = id;
     }
 
-    public User getUser() {
-        return this.user;
+    public List<OrderItem> getOrderItems() {
+        return items;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 
-
-
-    public List<ProductOrder> getProductOrders() {
-        return productOrders;
-    }
-
-    public void addProductOrder(ProductOrder productOrder) {
-        productOrders.add(productOrder);
-        productOrder.setOrder(this);
-    }
-
-    public void removeProductOrder(ProductOrder productOrder) {
-        productOrders.remove(productOrder);
-        productOrder.setOrder(null);
-    }
-
-    //
-
-    public BigDecimal getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public void setProductOrders(List<ProductOrder> productOrders) {
-        this.productOrders = productOrders;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getAddress() {
         return address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
+    public void addOrderItem(OrderItem orderItem) {
+        if (this.items == null) {
+            this.items = new ArrayList<OrderItem>();
+        }
+        this.items.add(orderItem);
+    }
 }

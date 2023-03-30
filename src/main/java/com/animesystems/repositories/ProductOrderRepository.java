@@ -1,8 +1,8 @@
 package com.animesystems.repositories;
 
-import com.animesystems.entities.ProductOrder;
+import com.animesystems.entities.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductOrderRepository extends JpaRepository<ProductOrder, Integer> {
+public interface ProductOrderRepository extends JpaRepository<OrderItem, Integer> {
 
 }

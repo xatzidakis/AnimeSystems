@@ -1,65 +1,44 @@
 package com.animesystems.services;
 
 import com.animesystems.entities.Order;
-import com.animesystems.entities.ProductOrder;
+import com.animesystems.entities.OrderItem;
 import com.animesystems.repositories.OrderRepository;
-import com.animesystems.repositories.ProductOrderRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductOrderRepository productOrderRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository,ProductOrderRepository productOrderRepository){
+    @Autowired
+    public OrderServiceImpl(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.productOrderRepository = productOrderRepository;
     }
 
 
-
-    public void deleteOrder(Integer id) {
-        Order orderToDelete = orderRepository.findById(id).orElseThrow();
-        orderRepository.delete(orderToDelete);
-
-    }
-
-
-    public Order createOrUpdateOrder(Integer id, Order order) throws Exception {
-
-        if(id!=null){
-            if(id.equals(order.getId())){
-                throw new Exception("Id does not match");
-            }
+    @Transactional
+    public Order save(Order order) {
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderItem.setOrder(order);
         }
-        return this.orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
 
-    public Page<Order> getAllOrders(int page, int size) {
-        PageRequest paging = PageRequest.of(page,size);
-
-        return orderRepository.findAll(paging);
-
+    public Order findById(Integer id) {
+        return orderRepository.findById(id).orElse(null);
     }
 
-
-    public Order getOrderById(Integer id) {
-        Order orderToFind= orderRepository.findById(id).orElseThrow();
-        return orderToFind;
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
-
-    public ProductOrder getProductOrderById(Integer id) throws Exception {
-        Optional<ProductOrder> optionalProductOrder = productOrderRepository.findById(id);
-        if (!optionalProductOrder.isPresent()) {
-            throw new Exception("ProductOrder not found with id " + id);
-        }
-        return optionalProductOrder.get();
+    @Transactional
+    public void deleteById(Integer id) {
+        orderRepository.deleteById(id);
     }
-
 }

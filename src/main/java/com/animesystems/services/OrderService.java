@@ -1,18 +1,17 @@
 package com.animesystems.services;
 
 import com.animesystems.entities.Order;
-import com.animesystems.entities.ProductOrder;
+import com.animesystems.entities.OrderItem;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 
 
 public interface OrderService {
-    public void deleteOrder(Integer id);
-    public Order createOrUpdateOrder(Integer id, Order order) throws Exception;
-    public Page<Order> getAllOrders(int page, int size);
-    public  Order getOrderById(Integer id);
-    public ProductOrder getProductOrderById(Integer id) throws Exception;
 
 
-
+    Order save(Order order);
+    void deleteById(Integer id);
+    public Order findById(Integer id);
+    public List<Order> getAllOrders();
 }

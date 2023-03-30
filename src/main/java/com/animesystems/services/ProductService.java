@@ -18,4 +18,5 @@ public interface ProductService {
     Page<Product> getByCategory(String category, int page, int size);
     Page<Product> getByColor(String color, int page, int size);
     Page<Product> getBySize(String productSize, int page, int size);
+
 }
