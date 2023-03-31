@@ -37,7 +37,6 @@ public class OrderController {
         UserDto userDto = userService.getUserById(orderDTO.getUserId());
         Order order = new Order();
         order.setAddress(orderDTO.getAddress());
-        order.setTotalPrice(0.0);
         order.setUser(UserMapper.mapToUser(userDto));
 
         for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {

@@ -30,6 +30,10 @@ public class Order {
     @Column
     private String address;
 
+    public Order() {
+        this.totalPrice = 0.0;
+    }
+
     public Integer getId() {
         return id;
     }
