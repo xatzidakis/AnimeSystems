@@ -31,14 +31,18 @@ public class Product {
     public enum Category {
         Figures, Clothing, Books
     }
+    @Enumerated(EnumType.STRING)
     private Category category;
+
 
     public enum Color{
         Black, White, Red, Yellow, Blue, Green
     }
+    @Enumerated(EnumType.STRING)
     private Color color;
 
     public enum Size{ XS, S, M, L, XL}
+    @Enumerated(EnumType.STRING)
     private Size size;
     private Integer available_quantity;
 
