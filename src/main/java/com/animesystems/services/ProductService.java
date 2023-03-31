@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public interface ProductService {
@@ -18,4 +19,5 @@ public interface ProductService {
     Page<Product> getByCategory(String category, int page, int size);
     Page<Product> getByColor(String color, int page, int size);
     Page<Product> getBySize(String productSize, int page, int size);
+    List<Product> addManyProducts(List<Product> products);
 }
