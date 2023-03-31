@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -16,6 +18,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @CrossOrigin
     @GetMapping
     public Page<Product> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -43,6 +46,14 @@ public class ProductController {
     public Product addProduct(@RequestBody Product product) {
         try {
             return productService.createOrUpdateProduct(product.getId(), product);
+        } catch (Exception e) {
+            throw  new HttpClientErrorException(HttpStatusCode.valueOf(400), e.getMessage());
+        }
+    }
+    @PostMapping("/many")
+    public List<Product> addManyProducts(@RequestBody List<Product> products) {
+        try {
+            return productService.addManyProducts(products);
         } catch (Exception e) {
             throw  new HttpClientErrorException(HttpStatusCode.valueOf(400), e.getMessage());
         }
