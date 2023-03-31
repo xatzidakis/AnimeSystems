@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("api/users")
 public class UserController {
     private UserService userService;
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
         UserDto savedUser = userService.createUser(userDto);
@@ -51,7 +52,7 @@ public class UserController {
     }
 
 
-
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LogInDTO logInDTO) {
         try {

@@ -31,6 +31,7 @@ public class OrderController {
 
 
 
+    @CrossOrigin
     @PostMapping()
     public Order createOrder(@RequestBody OrderDTO orderDTO) {
 
