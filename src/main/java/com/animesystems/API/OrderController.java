@@ -31,12 +31,10 @@ public class OrderController {
 
 
 
-    @PostMapping("{userId}")
-    public Order createOrder(@RequestBody OrderDTO orderDTO,
-                             @PathVariable Integer userId) {
+    @PostMapping()
+    public Order createOrder(@RequestBody OrderDTO orderDTO) {
 
-        UserDto userDto = userService.getUserById(userId);
-
+        UserDto userDto = userService.getUserById(orderDTO.getUserId());
         Order order = new Order();
         order.setAddress(orderDTO.getAddress());
         order.setTotalPrice(0.0);

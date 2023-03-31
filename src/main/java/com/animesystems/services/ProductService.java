@@ -1,9 +1,7 @@
 package com.animesystems.services;
-
 import com.animesystems.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 
 @Service

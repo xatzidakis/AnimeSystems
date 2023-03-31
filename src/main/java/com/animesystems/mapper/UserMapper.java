@@ -1,6 +1,4 @@
 package com.animesystems.mapper;
-
-
 import com.animesystems.dtos.UserDto;
 import com.animesystems.entities.User;
 

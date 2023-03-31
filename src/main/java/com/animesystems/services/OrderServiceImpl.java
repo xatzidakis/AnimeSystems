@@ -1,12 +1,10 @@
 package com.animesystems.services;
-
 import com.animesystems.entities.Order;
 import com.animesystems.entities.OrderItem;
 import com.animesystems.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service

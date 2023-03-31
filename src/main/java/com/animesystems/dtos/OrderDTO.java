@@ -1,20 +1,26 @@
 package com.animesystems.dtos;
-
-import com.animesystems.dtos.OrderItemDTO;
-
 import java.util.List;
-
 public class OrderDTO {
+
     private String address;
     private List<OrderItemDTO> orderItems;
-
+    private Integer userId;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(String address, List<OrderItemDTO> orderItems) {
+    public OrderDTO(String address, List<OrderItemDTO> orderItems,Integer userId) {
         this.address = address;
         this.orderItems = orderItems;
+        this.userId = userId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getAddress() {
