@@ -36,4 +36,6 @@ public class User {
     @JsonIgnore
     private List<Order> orders;
 
+    @Column
+    private boolean admin=false;
 }

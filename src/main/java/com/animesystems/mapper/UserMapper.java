@@ -13,7 +13,8 @@ public class UserMapper {
                 user.getEmail(),
                 user.getPassword(),
                 user.getAddress(),
-                user.getOrders()
+                user.getOrders(),
+                user.isAdmin()
         );
         return userDto;
     }
@@ -27,7 +28,8 @@ public class UserMapper {
                 userDto.getEmail(),
                 userDto.getPassword(),
                 userDto.getAddress(),
-                userDto.getOrders()
+                userDto.getOrders(),
+                userDto.isAdmin()
         );
         return user;
     }
