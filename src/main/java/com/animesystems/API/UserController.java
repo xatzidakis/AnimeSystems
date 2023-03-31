@@ -1,4 +1,5 @@
 package com.animesystems.API;
+import com.animesystems.dtos.LogInDTO;
 import com.animesystems.dtos.UserDto;
 import com.animesystems.services.UserService;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,17 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable("id")  Integer userId){
         userService.deleteUser(userId);
         return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticate(@RequestBody LogInDTO logInDTO) {
+        try {
+            UserDto authenticatedUser = userService.authenticate(logInDTO.getEmail(), logInDTO.getPassword());
+            return ResponseEntity.ok(authenticatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

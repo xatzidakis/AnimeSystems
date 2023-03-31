@@ -5,6 +5,8 @@ import com.animesystems.mapper.UserMapper;
 import com.animesystems.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,4 +66,17 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
-}
+
+
+    public UserDto authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null || !user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+            return UserMapper.mapToUserDto(user);
+
+        }
+    }
+
