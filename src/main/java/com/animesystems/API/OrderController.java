@@ -58,11 +58,13 @@ public class OrderController {
     }
 
 
+    @CrossOrigin
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public Order getOrderById(@PathVariable Integer id) {
         Order order = orderService.findById(id);
