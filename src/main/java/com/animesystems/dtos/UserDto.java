@@ -19,5 +19,6 @@ public class UserDto {
     private String password;
     private String address;
     private List<Order> orders;
+    private boolean admin;
 
 }
