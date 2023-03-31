@@ -1,6 +1,4 @@
 package com.animesystems.mapper;
-
-
 import com.animesystems.dtos.UserDto;
 import com.animesystems.entities.User;
 
@@ -14,7 +12,8 @@ public class UserMapper {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getAddress()
+                user.getAddress(),
+                user.getOrders()
         );
         return userDto;
     }
@@ -27,7 +26,8 @@ public class UserMapper {
                 userDto.getLastName(),
                 userDto.getEmail(),
                 userDto.getPassword(),
-                userDto.getAddress()
+                userDto.getAddress(),
+                userDto.getOrders()
         );
         return user;
     }

@@ -15,4 +15,6 @@ public interface UserService {
     UserDto updateUser(UserDto user);
 
     void deleteUser(Integer userId);
+
+    UserDto authenticate(String email, String password);
 }

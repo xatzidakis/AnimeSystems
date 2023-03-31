@@ -20,6 +20,12 @@ public class Product {
     private String size;
     private Integer available_quantity;
 
+    public Product(Integer id) {
+        this.id = id;
+    }
+
+    public Product(){}
+
     public Integer getId() {
         return id;
     }
