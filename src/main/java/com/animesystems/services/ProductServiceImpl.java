@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,5 +75,9 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getBySize(String productSize, int page, int size) {
         PageRequest paging = PageRequest.of(page, size);
         return productRepository.findBySizeEquals(productSize, paging);
+    }
+    @Override
+    public List<Product> addManyProducts(List<Product> products) {
+        return productRepository.saveAll(products);
     }
 }
